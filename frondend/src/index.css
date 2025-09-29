@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+.text-muted {
+    @apply text-slate-400;
+}
+.card {
+    @apply bg-white rounded-2xl shadow p-6;
+}
