@@ -5,8 +5,9 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import invoiceRoutes from './routes/invoiceRoutes.js';
-import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
+import connectDB from './config/db.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
 dotenv.config();
@@ -22,6 +23,7 @@ app.get('/', (req, res) => res.send('MERN Billing Api is running...')); // Basic
 app.use('/api/products', productRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

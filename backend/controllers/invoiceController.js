@@ -27,11 +27,9 @@ const createInvoice = async (req, res) => {
         for (const item of items) {
             const product = await Product.findById(item.product);
             if (!product) {
-                return res
-                    .status(404)
-                    .json({
-                        message: `Product with ID ${item.product} not found`,
-                    });
+                return res.status(404).json({
+                    message: `Product with ID ${item.product} not found`,
+                });
             }
 
             const qty = Number(item.qty || 0);
@@ -72,6 +70,15 @@ const createInvoice = async (req, res) => {
 
         const savedInvoice = await newInvoice.save();
         res.status(201).json(savedInvoice);
+
+        // Reduce stock after invoice creation
+        for (const item of items) {
+            await Product.findByIdAndUpdate(
+                item.product,
+                { $inc: { stock: -item.qty } },
+                { new: true }
+            );
+        }
     } catch (error) {
         res.status(500).json({ message: 'Server Error', error: error.message });
     }
