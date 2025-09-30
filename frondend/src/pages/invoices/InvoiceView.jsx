@@ -14,14 +14,13 @@ const InvoiceView = () => {
             .catch(() => {});
     }, [id]);
 
-    // view PDF
+    // View PDF in browser
     const viewPdf = async () => {
         try {
             setLoading(true);
             const response = await api.get(`/invoices/${id}/pdf`, {
                 responseType: 'blob',
             });
-
             const url = window.URL.createObjectURL(
                 new Blob([response.data], { type: 'application/pdf' })
             );
@@ -33,13 +32,12 @@ const InvoiceView = () => {
         }
     };
 
-    // Secure PDF download
+    // Download PDF securely
     const downloadPdf = async () => {
         try {
             const response = await api.get(`/invoices/${id}/pdf`, {
                 responseType: 'blob',
             });
-
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -47,7 +45,7 @@ const InvoiceView = () => {
             document.body.appendChild(link);
             link.click();
             link.remove();
-        } catch (err) {
+        } catch {
             alert('Failed to download PDF');
         }
     };
@@ -55,65 +53,77 @@ const InvoiceView = () => {
     if (!invoice)
         return (
             <Layout>
-                <div className="card">Loading...</div>
+                <div className="text-center py-20 text-gray-500 text-lg">
+                    Loading Invoice...
+                </div>
             </Layout>
         );
 
     return (
         <Layout>
-            <div className="card max-w-3xl">
-                <div className="flex justify-between items-start">
+            <div className="bg-white shadow-xl rounded-xl p-6 max-w-4xl mx-auto">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                     <div>
-                        <h3 className="text-xl font-semibold">
+                        <h3 className="text-2xl font-bold text-gray-800">
                             Invoice {invoice.invoiceNumber}
                         </h3>
-                        <div className="text-muted">
+                        <div className="text-gray-500 mt-1">
                             {new Date(invoice.date).toLocaleString()}
                         </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-3 mt-4 md:mt-0">
                         <button
                             onClick={viewPdf}
-                            className="py-2 px-3 rounded bg-black text-white"
-                            disabled={loading}>
+                            disabled={loading}
+                            className="flex items-center gap-2 py-2 px-4 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow hover:scale-105 transition-transform duration-200">
                             {loading && (
-                                <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+                                <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
                             )}
                             {loading ? 'Processing...' : 'View PDF'}
                         </button>
                         <button
                             onClick={downloadPdf}
-                            className="py-2 px-3 rounded bg-black text-white">
+                            className="py-2 px-4 rounded-lg border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-colors duration-200 font-semibold">
                             Download PDF
                         </button>
                     </div>
                 </div>
 
-                <div className="mt-4">
+                <div className="mb-6 space-y-1 text-gray-700">
                     <div>
-                        Customer: <strong>{invoice.customerName}</strong>
+                        <span className="font-semibold">Customer:</span>{' '}
+                        {invoice.customerName}
                     </div>
-                    <div>Address: {invoice.customerAddress}</div>
+                    <div>
+                        <span className="font-semibold">Address:</span>{' '}
+                        {invoice.customerAddress}
+                    </div>
                 </div>
 
-                <table className="w-full mt-4 border-collapse">
+                <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="text-left border-b">
-                            <th className="py-2">Product</th>
-                            <th>Qty</th>
-                            <th>Unit</th>
-                            <th>GST%</th>
-                            <th className="text-right">Total</th>
+                        <tr className="bg-gray-100 text-gray-600 uppercase text-sm">
+                            <th className="py-2 px-3 rounded-tl-lg">Product</th>
+                            <th className="py-2 px-3">Qty</th>
+                            <th className="py-2 px-3">Unit</th>
+                            <th className="py-2 px-3">GST%</th>
+                            <th className="py-2 px-3 text-right rounded-tr-lg">
+                                Total
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {invoice.items.map((it) => (
-                            <tr key={it._id} className="border-b">
-                                <td className="py-2">{it.name}</td>
-                                <td>{it.qty}</td>
-                                <td>₹{it.unitPrice.toFixed(2)}</td>
-                                <td>{it.gstPercent}%</td>
-                                <td className="text-right">
+                            <tr
+                                key={it._id}
+                                className="border-b hover:bg-gray-50 transition-colors">
+                                <td className="py-2 px-3">{it.name}</td>
+                                <td className="py-2 px-3">{it.qty}</td>
+                                <td className="py-2 px-3">
+                                    ₹{it.unitPrice.toFixed(2)}
+                                </td>
+                                <td className="py-2 px-3">{it.gstPercent}%</td>
+                                <td className="py-2 px-3 text-right">
                                     ₹{it.totalInclGst.toFixed(2)}
                                 </td>
                             </tr>
@@ -121,10 +131,10 @@ const InvoiceView = () => {
                     </tbody>
                 </table>
 
-                <div className="mt-4 text-right space-y-1">
+                <div className="mt-6 text-right space-y-1 text-gray-700">
                     <div>Subtotal: ₹{invoice.subTotal.toFixed(2)}</div>
                     <div>Total GST: ₹{invoice.totalGst.toFixed(2)}</div>
-                    <div className="text-xl font-bold">
+                    <div className="text-2xl font-bold text-gray-900">
                         Grand Total: ₹{invoice.total.toFixed(2)}
                     </div>
                 </div>

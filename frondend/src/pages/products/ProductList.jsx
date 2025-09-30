@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../../services/api';
 import Layout from '../../components/Layout';
 import { Link } from 'react-router-dom';
@@ -57,8 +56,8 @@ const ProductList = () => {
 
     return (
         <Layout>
-            <div className="flex flex-col md:flex-row items-center justify-between mb-4 gap-2">
-                <h2 className="text-xl font-semibold">Products</h2>
+            <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-3">
+                <h2 className="text-2xl font-bold text-gray-800">Products</h2>
                 <Search
                     value={search}
                     onChange={setSearch}
@@ -66,37 +65,52 @@ const ProductList = () => {
                 />
                 <Link
                     to="/products/new"
-                    className="py-2 px-4 rounded bg-black text-white">
+                    className="py-2 px-5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
                     Add Product
                 </Link>
             </div>
 
-            {error && <div className="text-red-600">{error}</div>}
+            {error && <div className="text-red-600 mb-4">{error}</div>}
 
-            <div className="grid md:grid-cols-1 gap-4">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.map((p) => (
-                    <div key={p._id} className="card flex justify-between">
-                        <h3 className="font-semibold">{p.name}</h3>
-
-                        <p className="mt-2">Stock: {p.stock}</p>
-                        <p className="mt-2">Price: ₹{p.price.toFixed(2)}</p>
+                    <div
+                        key={p._id}
+                        className="bg-white p-5 rounded-xl shadow-md hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <h3 className="text-lg font-semibold text-gray-800 capitalize">
+                                {p.name}
+                            </h3>
+                            <p className="mt-2 text-gray-600">
+                                Stock: {p.stock}
+                            </p>
+                            <p className="mt-1 text-gray-600">
+                                Price: ₹{p.price.toFixed(2)}
+                            </p>
+                        </div>
 
                         <div className="mt-4 flex gap-2">
                             <Link
                                 to={`/products/${p._id}/edit`}
-                                className="py-1 px-3 rounded border cursor-pointer">
+                                className="flex-1 py-2 px-4 rounded-full bg-blue-500 hover:bg-blue-600 text-white text-center font-semibold shadow-md transition transform hover:scale-105">
                                 Edit
                             </Link>
                             <button
                                 onClick={() => handleDelete(p._id)}
-                                className="py-1 px-3 rounded bg-red-500 text-white cursor-pointer">
+                                className="flex-1 py-2 px-4 rounded-full text-white font-semibold
+             bg-gradient-to-r from-gray-700 via-gray-500 to-gray-400
+             hover:from-gray-800 hover:via-gray-600 hover:to-gray-500
+             shadow-md hover:shadow-lg hover:scale-105
+             transition-all duration-300">
                                 Delete
                             </button>
                         </div>
                     </div>
                 ))}
                 {filteredProducts.length === 0 && (
-                    <div className="text-gray-500">No products found.</div>
+                    <div className="text-gray-500 col-span-full text-center py-10">
+                        No products found.
+                    </div>
                 )}
             </div>
         </Layout>

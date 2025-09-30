@@ -9,6 +9,7 @@ const InvoiceList = () => {
     const [filteredInvoices, setFilteredInvoices] = useState([]);
     const [search, setSearch] = useState('');
 
+    // Fetch all invoices
     useEffect(() => {
         api.get('/invoices')
             .then((i) => {
@@ -18,6 +19,7 @@ const InvoiceList = () => {
             .catch(() => {});
     }, []);
 
+    // Filter invoices with debounce
     useEffect(() => {
         const timer = setTimeout(() => {
             if (!search) {
@@ -33,12 +35,14 @@ const InvoiceList = () => {
                 );
             }
         }, 300);
+
+        return () => clearTimeout(timer);
     }, [search, invoices]);
 
     return (
         <Layout>
-            <div className="flex flex-col md:flex-row items-center justify-between mb-4 gap-2">
-                <h2 className="text-xl font-semibold">Invoices</h2>
+            <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
+                <h2 className="text-3xl font-bold text-gray-800">Invoices</h2>
                 <Search
                     value={search}
                     onChange={setSearch}
@@ -46,34 +50,42 @@ const InvoiceList = () => {
                 />
                 <Link
                     to="/invoices/new"
-                    className="py-2 px-4 rounded bg-black text-white">
+                    className="py-2 px-5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow hover:scale-105 transition-transform duration-200">
                     Create Invoice
                 </Link>
             </div>
 
-            <div className="space-y-4">
-                {filteredInvoices.map((inv) => (
-                    <div
-                        key={inv._id}
-                        className="card flex justify-between items-center">
-                        <div>
-                            <div className="font-semibold">
-                                {inv.invoiceNumber}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredInvoices.length > 0 ? (
+                    filteredInvoices.map((inv) => (
+                        <div
+                            key={inv._id}
+                            className="bg-white rounded-xl shadow-lg p-5 flex justify-between items-center hover:shadow-2xl transition-shadow duration-300">
+                            <div>
+                                <div className="font-semibold text-lg text-gray-800">
+                                    {inv.invoiceNumber}
+                                </div>
+                                <div className="text-gray-500 mt-1">
+                                    {new Date(inv.date).toLocaleDateString()} •{' '}
+                                    {inv.customerName}
+                                </div>
                             </div>
-                            <div className="text-muted">
-                                {new Date(inv.date).toLocaleDateString()} •{' '}
-                                {inv.customerName}
+                            <div>
+                                <Link
+                                    to={`/invoices/${inv._id}`}
+                                    className="py-2 px-5 rounded-full bg-gray-700 text-white font-semibold 
+             shadow-md hover:bg-gray-800 hover:shadow-lg hover:scale-105 
+             transition-all duration-300">
+                                    View
+                                </Link>
                             </div>
                         </div>
-                        <div className="flex gap-2">
-                            <Link
-                                to={`/invoices/${inv._id}`}
-                                className="py-1 px-4 rounded-full border bg-black text-white">
-                                View
-                            </Link>
-                        </div>
+                    ))
+                ) : (
+                    <div className="col-span-full text-center text-gray-500 mt-10 text-lg">
+                        No invoices found.
                     </div>
-                ))}
+                )}
             </div>
         </Layout>
     );

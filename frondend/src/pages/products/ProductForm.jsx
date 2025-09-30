@@ -43,67 +43,70 @@ const ProductForm = () => {
             alert('Save failed');
         }
     };
+
     return (
         <Layout>
-            <div className="card max-w-xl">
-                <h2 className="text-xl font-semibold mb-4">
-                    {id ? 'Edit' : 'Add'} Product
-                </h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <input
-                        name="name"
-                        placeholder="Name"
-                        value={form.name}
-                        onChange={handleChange}
-                        className="w-full p-3 border rounded"
-                        required
-                    />
-                    
-                    <input
-                        name="price"
-                        type="number"
-                        step="0.01"
-                        placeholder="Price"
-                        value={form.price}
-                        onChange={handleChange}
-                        className="w-full p-3 border rounded"
-                        required
-                    />
-                    <input
-                        name="gst"
-                        type="number"
-                        placeholder="GST %"
-                        value={form.gst}
-                        onChange={handleChange}
-                        className="w-full p-3 border rounded"
-                    />
-                    <input
-                        name="stock"
-                        type="number"
-                        placeholder="Stock"
-                        value={form.stock}
-                        onChange={handleChange}
-                        className="w-full p-3 border rounded"
-                    />
-                    <textarea
-                        name="description"
-                        placeholder="Description"
-                        value={form.description}
-                        onChange={handleChange}
-                        className="w-full p-3 border rounded"
-                    />
-                    <div className="flex gap-2">
-                        <button className="py-2 px-4 rounded bg-black text-white">
-                            Save
-                        </button>
-                        <button
-                            type="button"
-                            className="py-2 px-4 rounded border"
-                            onClick={() => navigate('/products')}>
-                            Cancel
-                        </button>
-                    </div>
-                </form>
+            <div className="max-w-xl mx-auto">
+                <div className="bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-shadow duration-300">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                        {id ? 'Edit' : 'Add'} Product
+                    </h2>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <input
+                            name="name"
+                            placeholder="Product Name"
+                            value={form.name}
+                            onChange={handleChange}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                            required
+                        />
+                        <input
+                            name="price"
+                            type="number"
+                            step="0.01"
+                            placeholder="Price (₹)"
+                            value={form.price}
+                            onChange={handleChange}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                            required
+                        />
+                        <input
+                            name="gst"
+                            type="number"
+                            placeholder="GST %"
+                            value={form.gst}
+                            onChange={handleChange}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                        />
+                        <input
+                            name="stock"
+                            type="number"
+                            placeholder="Stock Quantity"
+                            value={form.stock}
+                            onChange={handleChange}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                        />
+                        <textarea
+                            name="description"
+                            placeholder="Description"
+                            value={form.description}
+                            onChange={handleChange}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none transition"
+                            rows={4}
+                        />
+                        <div className="flex gap-3 mt-4">
+                            <button className="flex-1 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition">
+                                Save
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => navigate('/products')}
+                                className="flex-1 py-3 border rounded-lg hover:bg-gray-100 transition">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </Layout>
     );

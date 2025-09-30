@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import api from '../services/api';
+import { FaUser, FaLock } from 'react-icons/fa';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -25,36 +26,47 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-white">
-            <div className="w-full max-w-md card">
-                <h2 className="text-2xl font-bold mb-4">Sign in</h2>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white">
+            <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl">
+                <h2 className="text-3xl font-bold mb-6 text-center text-indigo-700">
+                    Welcome Back
+                </h2>
                 {error && (
-                    <div className="bg-red-100 text-red-700 p-2 rounded mb-4">
+                    <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-center font-medium">
                         {error}
                     </div>
                 )}
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm">Username</label>
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="relative">
+                        <FaUser className="absolute left-3 top-3 text-gray-400" />
                         <input
-                            className="w-full mt-1 p-3 rounded border"
+                            className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                            placeholder="Username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            required
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm">Password</label>
+                    <div className="relative">
+                        <FaLock className="absolute left-3 top-3 text-gray-400" />
                         <input
                             type="password"
-                            className="w-full mt-1 p-3 rounded border"
+                            className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                            placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
                     </div>
-                    <button className="w-full py-3 rounded bg-black text-white cursor-pointer">
+                    <button
+                        type="submit"
+                        className="w-full py-3 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition duration-300">
                         Login
                     </button>
                 </form>
+                <p className="mt-4 text-sm text-center text-gray-500">
+                    Enter your credentials to access the dashboard
+                </p>
             </div>
         </div>
     );
